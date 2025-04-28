@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScoreSports - Aplicativo Esportivo</title>
+    <style>
+        :root {
+            --primary: #3498db;
+            --secondary: #2ecc71;
+            --dark: #2c3e50;
+            --light: #ecf0f1;
+            --danger: #e74c3c;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: var(--dark);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            margin-bottom: 30px;
+            border-radius: 0 0 10px 10px;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+        }
+        
+        .sport-selector {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        
+        .sport-btn {
+            padding: 10px 20px;
+            margin: 0 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: var(--primary);
+            color: white;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .sport-btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .sport-btn.active {
+            background-color: var(--secondary);
+        }
+        
+        .scoreboard {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .teams {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+        
+        .team {
+            text-align: center;
+            width: 40%;
+        }
+        
+        .team-name {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            padding: 5px;
+            border: none;
+            border-bottom: 2px solid var(--primary);
+            text-align: center;
+            width: 100%;
+        }
+        
+        .score {
+            font-size: 3rem;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary);
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #27ae60;
+        }
+        
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+        
+        .timer-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .timer {
+            font-size: 2.5rem;
+            font-family: monospace;
+            margin-bottom: 10px;
+        }
+        
+        .timer-controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .fouls-container {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+        
+        .fouls {
+            text-align: center;
+            width: 40%;
+        }
+        
+        .fouls-count {
+            font-size: 1.8rem;
+            margin: 10px 0;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            color: #7f8c8d;
+        }
+        
+        @media (max-width: 600px) {
+            .teams, .fouls-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .team, .fouls {
+                width: 80%;
+                margin-bottom: 20px;
+            }
+            
+            .controls {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>ScoreSports</h1>
+            <p>Aplicativo para acompanhamento de partidas esportivas</p>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="sport-selector">
+            <button class="sport-btn active" id="volleyball-btn">Vôlei</button>
+            <button class="sport-btn" id="soccer-btn">Futebol</button>
+        </div>
+        
+        <div class="scoreboard">
+            <div class="teams">
+                <div class="team">
+                    <input type="text" class="team-name" id="team1-name" value="Equipe A">
+                    <div class="score" id="team1-score">0</div>
+                    <div class="controls">
+                        <button class="btn btn-primary" onclick="updateScore('team1', 1)">+1</button>
+                        <button class="btn btn-danger" onclick="updateScore('team1', -1)">-1</button>
+                    </div>
+                </div>
+                
+                <div class="team">
+                    <input type="text" class="team-name" id="team2-name" value="Equipe B">
+                    <div class="score" id="team2-score">0</div>
+                    <div class="controls">
+                        <button class="btn btn-primary" onclick="updateScore('team2', 1)">+1</button>
+                        <button class="btn btn-danger" onclick="updateScore('team2', -1)">-1</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="timer-container">
+                <div class="timer" id="game-timer">10:00</div>
+                <div class="timer-controls">
+                    <button class="btn btn-primary" id="start-timer">Iniciar</button>
+                    <button class="btn btn-secondary" id="pause-timer">Pausar</button>
+                    <button class="btn btn-danger" id="reset-timer">Reiniciar</button>
+                </div>
+            </div>
+            
+            <div class="fouls-container">
+                <div class="fouls">
+                    <h3>Faltas</h3>
+                    <div class="fouls-count" id="team1-fouls">0</div>
+                    <div class="controls">
+                        <button class="btn btn-primary" onclick="updateFouls('team1', 1)">+1</button>
+                        <button class="btn btn-danger" onclick="updateFouls('team1', -1)">-1</button>
+                    </div>
+                </div>
+                
+                <div class="fouls">
+                    <h3>Faltas</h3>
+                    <div class="fouls-count" id="team2-fouls">0</div>
+                    <div class="controls">
+                        <button class="btn btn-primary" onclick="updateFouls('team2', 1)">+1</button>
+                        <button class="btn btn-danger" onclick="updateFouls('team2', -1)">-1</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer class="footer">
+        <div class="container">
+            <p>Aplicativo desenvolvido para o curso técnico - ScoreSports © 2023</p>
+        </div>
+    </footer>
+    
+    <script>
+        // Variáveis do jogo
+        let gameTime = 600; // 10 minutos em segundos
+        let timerInterval;
+        let isTimerRunning = false;
+        let currentSport = 'volleyball';
+        
+        // Elementos do DOM
+        const volleyballBtn = document.getElementById('volleyball-btn');
+        const soccerBtn = document.getElementById('soccer-btn');
+        const startTimerBtn = document.getElementById('start-timer');
+        const pauseTimerBtn = document.getElementById('pause-timer');
+        const resetTimerBtn = document.getElementById('reset-timer');
+        const gameTimerDisplay = document.getElementById('game-timer');
+        
+        // Event Listeners
+        volleyballBtn.addEventListener('click', () => switchSport('volleyball'));
+        soccerBtn.addEventListener('click', () => switchSport('soccer'));
+        startTimerBtn.addEventListener('click', startTimer);
+        pauseTimerBtn.addEventListener('click', pauseTimer);
+        resetTimerBtn.addEventListener('click', resetTimer);
+        
+        // Funções
+        function switchSport(sport) {
+            currentSport = sport;
+            if (sport === 'volleyball') {
+                volleyballBtn.classList.add('active');
+                soccerBtn.classList.remove('active');
+                // Pode adicionar lógica específica para vôlei aqui
+            } else {
+                volleyballBtn.classList.remove('active');
+                soccerBtn.classList.add('active');
+                // Pode adicionar lógica específica para futebol aqui
+            }
+        }
+        
+        function updateScore(team, value) {
+            const scoreElement = document.getElementById(`${team}-score`);
+            let score = parseInt(scoreElement.textContent);
+            score += value;
+            if (score < 0) score = 0;
+            scoreElement.textContent = score;
+        }
+        
+        function updateFouls(team, value) {
+            const foulsElement = document.getElementById(`${team}-fouls`);
+            let fouls = parseInt(foulsElement.textContent);
+            fouls += value;
+            if (fouls < 0) fouls = 0;
+            foulsElement.textContent = fouls;
+        }
+        
+        function startTimer() {
+            if (!isTimerRunning) {
+                isTimerRunning = true;
+                timerInterval = setInterval(updateTimer, 1000);
+                startTimerBtn.disabled = true;
+                pauseTimerBtn.disabled = false;
+            }
+        }
+        
+        function pauseTimer() {
+            if (isTimerRunning) {
+                clearInterval(timerInterval);
+                isTimerRunning = false;
+                startTimerBtn.disabled = false;
+                pauseTimerBtn.disabled = true;
+            }
+        }
+        
+        function resetTimer() {
+            pauseTimer();
+            gameTime = 600; // Reset para 10 minutos
+            updateTimerDisplay();
+            startTimerBtn.disabled = false;
+            pauseTimerBtn.disabled = false;
+        }
+        
+        function updateTimer() {
+            if (gameTime > 0) {
+                gameTime--;
+                updateTimerDisplay();
+            } else {
+                pauseTimer();
+                alert('Tempo de jogo encerrado!');
+            }
+        }
+        
+        function updateTimerDisplay() {
+            const minutes = Math.floor(gameTime / 60);
+            const seconds = gameTime % 60;
+            gameTimerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+        
+        // Inicialização
+        updateTimerDisplay();
+        pauseTimerBtn.disabled = true;
+    </script>
+</body>
+</html>
